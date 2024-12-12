@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cat Shop</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Creepster&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f7fbff;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cpath d='M15 20c2-2 4-4 8-4s6 2 8 4m-16 0c2 2 4 4 4 8s-2 6-4 8m16-16c-2 2-4 4-4 8s2 6 4 8' stroke='%23cfe8ff' stroke-width='2'/%3E%3Ccircle cx='23' cy='24' r='1' fill='%23cfe8ff'/%3E%3Ccircle cx='31' cy='24' r='1' fill='%23cfe8ff'/%3E%3C/g%3E%3C/svg%3E");
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: #333;
+            color: white;
+            padding: 10px 20px;
+            z-index: 1000;
+        }
+
+        .navbar h1 {
+            margin: 0;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .navbar h1 i {
+            font-size: 24px;
+            color: #ffdd00;
+        }
+
+        .menu-btn {
+            position: absolute;
+            left: 10px;
+            cursor: pointer;
+            font-size: 24px;
+        }
+
+        .side-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 250px;
+            height: 100%;
+            background-color: #444;
+            color: white;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+            z-index: 1001;
+        }
+
+        .side-nav.active {
+            transform: translateX(0);
+        }
+
+        .side-nav ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .side-nav ul li {
+            padding: 15px 20px;
+            border-bottom: 1px solid #555;
+        }
+
+        .side-nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+        }
+
+        .side-nav .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .image-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 80px 20px 20px; /* Adjust padding for navbar */
+        }
+
+        .image-box {
+            position: relative;
+            transition: all 0.3s ease;
+            margin: 20px;
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .cat-details {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.95);
+            padding: 15px;
+            border-radius: 8px;
+            width: 80%;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 10;
+        }
+
+        .image-box:hover .cat-details {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .image-box:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        }
+
+        .image-box img {
+            width: 200px;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .image-box:hover img {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .buy-btn {
+            margin-top: 10px;
+            padding: 10px 15px;
+            border: none;
+            background-color: #007BFF;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .buy-btn:hover {
+            background-color: #0056b3;
+        }
+
+        @media (max-width: 768px) {
+            .side-nav {
+                width: 100%;
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .footer {
+            background-color: #333;
+            color: white;
+            padding: 40px 20px;
+            margin-top: 40px;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+        }
+
+        .footer-section {
+            padding: 0 20px;
+        }
+
+        .footer-section h3 {
+            color: #ffdd00;
+            margin-bottom: 20px;
+        }
+
+        .social-links a {
+            color: white;
+            text-decoration: none;
+            margin-right: 15px;
+            font-size: 24px;
+            transition: color 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: #ffdd00;
+        }
+
+        .contact-info p {
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #555;
+        }
+
+        @media (max-width: 768px) {
+            .footer-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            
+            .contact-info p {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="menu-btn" onclick="menuToggle()">
+            <i class="fas fa-bars"></i>
+        </div>
+        <h1><i class="fas fa-paw"></i> Cat Shop</h1>
+    </div>
+
+    <div class="side-nav" id="sideNav">
+        <div class="close-btn" onclick="menuToggle()">
+            <i class="fas fa-times"></i>
+        </div>
+        <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Shop</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Contact</a></li>
+        </ul>
+    </div>
+
+    <div class="image-container" id="gallery">
+        <div class="image-box" data-breed="siamese">
+            <img src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcSTr0M-Tn9-pybbNQ8yair1dBi2ouhz5Gew9rUrgezo6hFmG6BZgxttga0MLE1VgGz4IDKYjcE8RUZZfY8w8FTaKA" alt="Siamese Cat">
+            <p>Siamese Cat</p>
+            <button class="buy-btn">Buy Now</button>
+        </div>
+        <div class="image-box" data-breed="persian">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/8/81/Persialainen.jpg" alt="Persian Cat">
+            <p>Persian Cat</p>
+            <button class="buy-btn">Buy Now</button>
+        </div>
+        <div class="image-box" data-breed="mainecoon">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWq5D4Tnnqu_eEub4Rs_csysy18lKDKOfBsw&s" alt="Maine Coon">
+            <p>Maine Coon</p>
+            <button class="buy-btn">Buy Now</button>
+        </div>
+        <div class="image-box" data-breed="abyssinian">
+            <img src="https://www.thesprucepets.com/thmb/MigiLYeVSJcj0zkNVkJ--rALMZI=/2121x0/filters:no_upscale():strip_icc()/GettyImages-165827729-efc11c02690f457a81ef6ccbfa8eb34d.jpg" alt="Abyssinian">
+            <p>Abyssinian</p>
+            <button class="buy-btn">Buy Now</button>
+        </div>
+        <div class="image-box" data-breed="britishshorthair">
+            <img src="https://cfa.org/wp-content/uploads/2024/03/British_Short_Hair_Frunk.jpg" alt="British Shorthair">
+            <p>British Shorthair</p>
+            <button class="buy-btn">Buy Now</button>
+        </div>
+        <div class="image-box" data-breed="russianblue">
+            <img src="https://www.purina.in/sites/default/files/2021-02/CAT%20HERO_0020_Russian_blue.jpg" alt="Russian Blue">
+            <p>Russian Blue</p>
+            <button class="buy-btn">Buy Now</button>
+        </div>
+        <div class="image-box" data-breed="scottishfold">
+            <img src="https://pangovet.com/wp-content/uploads/2024/06/scottish-fold-munchkin-cat-lying-on-pillow_Kellee-Kovalsky-Shutterstock.jpeg" alt="Scottish Fold">
+            <p>Scottish Fold</p>
+            <button class="buy-btn">Buy Now</button>
+        </div>
+        <div class="image-box" data-breed="norwegianforest">
+            <img src="https://www.thesprucepets.com/thmb/c4xUQ9bmuswDR-umoAKTmwH_r-A=/1500x0/filters:no_upscale():strip_icc()/norwegian-forest-cat-4170085-fe84aa86023446c4b64236ddfbdefd2b.jpg" alt="Norwegian Forest Cat">
+            <p>Norwegian Forest Cat</p>
+            <button class="buy-btn">Buy Now</button>
+        </div>
+        <div class="image-box" data-breed="birman">
+            <img src="https://www.thesprucepets.com/thmb/D5s03LINbIYpZuiG6uvBpKrAKXk=/3500x0/filters:no_upscale():strip_icc()/GettyImages-623368786-f66c97ad6d2d494287b448415f4340a8.jpg" alt="Birman">
+            <p>Birman</p>
+            <button class="buy-btn">Buy Now</button>
+        </div>
+    </div>
+
+    <script>
+        const sideNav = document.getElementById('sideNav');
+
+        function menuToggle() {
+            sideNav.classList.toggle('active');
+        }
+
+        document.querySelectorAll('.buy-btn').forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.stopPropagation();
+                alert('Thank you for your purchase!');
+            });
+        });
+
+        document.querySelectorAll('.cart-btn').forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.stopPropagation();
+                alert('Added to cart!');
+            });
+        });
+
+        document.querySelectorAll('.image-box').forEach(box => {
+            const breed = box.dataset.breed;
+            const detailsDiv = document.createElement('div');
+            detailsDiv.className = 'cat-details';
+            
+            const details = {
+                'siamese': {
+                    specialty: 'Known for their distinctive color points and blue eyes',
+                    lifespan: '12-15 years',
+                    gender: 'Available in both male and female',
+                    age: 'Kittens: 4 months old'
+                },
+                'persian': {
+                    specialty: 'Luxurious long coat and sweet personality',
+                    lifespan: '12-17 years',
+                    gender: 'Available in both male and female',
+                    age: 'Adults: 2 years old'
+                },
+                'mainecoon': {
+                    specialty: 'Largest domestic cat breed with tufted ears',
+                    lifespan: '13-18 years',
+                    gender: 'Available in both male and female',
+                    age: 'Young adults: 1 year old'
+                },
+                'abyssinian': {
+                    specialty: 'Active and intelligent with a distinctive ticked tabby coat',
+                    lifespan: '12-16 years',
+                    gender: 'Available in both male and female',
+                    age: 'Young adults: 1 year old'
+                },
+                'britishshorthair': {
+                    specialty: 'Known for their dense plush coat and round face',
+                    lifespan: '12-17 years',
+                    gender: 'Available in both male and female',
+                    age: 'Adults: 3 years old'
+                },
+                'russianblue': {
+                    specialty: 'Plush silver-blue coat and green eyes',
+                    lifespan: '15-20 years',
+                    gender: 'Available in both male and female',
+                    age: 'Young adults: 1.5 years old'
+                },
+                'scottishfold': {
+                    specialty: 'Distinctive folded ears and round face',
+                    lifespan: '11-14 years',
+                    gender: 'Available in both male and female',
+                    age: 'Kittens: 5 months old'
+                },
+                'norwegianforest': {
+                    specialty: 'Large, sturdy build with long waterproof coat',
+                    lifespan: '14-16 years',
+                    gender: 'Available in both male and female',
+                    age: 'Adults: 2 years old'
+                },
+                'birman': {
+                    specialty: 'Color point coat with white gloves on paws',
+                    lifespan: '12-16 years',
+                    gender: 'Available in both male and female',
+                    age: 'Kittens: 6 months old'
+                }
+            };
+
+            const breedDetails = details[breed];
+            if (breedDetails) {
+                detailsDiv.innerHTML = `
+                    <p><strong>Specialty:</strong> ${breedDetails.specialty}</p>
+                    <p><strong>Life Span:</strong> ${breedDetails.lifespan}</p>
+                    <p><strong>Gender:</strong> ${breedDetails.gender}</p>
+                    <p><strong>Age:</strong> ${breedDetails.age}</p>
+                `;
+                box.appendChild(detailsDiv);
+            }
+        });
+    </script>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>About Cat Shop</h3>
+                <p>Your premier destination for finding your perfect feline companion. We connect loving homes with exceptional breeds.</p>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Connect With Us</h3>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Contact Info</h3>
+                <div class="contact-info">
+                    <p><i class="fas fa-phone"></i> +1 (555) 123-4567</p>
+                    <p><i class="fas fa-envelope"></i> info@catshop.com</p>
+                    <p><i class="fas fa-map-marker-alt"></i> 123 Whisker Lane, Pawville, CA 90210</p>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Newsletter</h3>
+                <p>Subscribe to get updates on new arrivals and special offers!</p>
+                <form style="margin-top: 15px;">
+                    <input type="email" placeholder="Enter your email" style="padding: 8px; width: 200px; margin-right: 5px;">
+                    <button class="buy-btn" style="margin-top: 10px;">Subscribe</button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2024 Cat Shop. All rights reserved. | <a href="#" style="color: #ffdd00;">Privacy Policy</a> | <a href="#" style="color: #ffdd00;">Terms of Service</a></p>
+        </div>
+    </footer>
+</body>
+</html>
